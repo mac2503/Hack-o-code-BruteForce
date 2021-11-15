@@ -25,6 +25,23 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
+  addiction: {
+    type: String,
+    required: [true, 'Please add the type of addiction'],
+    enum: ['caffeine', 'smoking', 'sugar', 'drugs']
+  },
+  longestStreak: {
+    type: Number,
+    default: 90 // days
+  },
+  currentStreak: {
+    type: Number,
+    default: 0
+  },
+  points: {
+    type: Number,
+    default: 0,
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {

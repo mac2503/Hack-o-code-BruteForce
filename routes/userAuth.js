@@ -6,7 +6,8 @@ const {
   forgotPassword, 
   resetPassword, 
   updateDetails,
-  updatePassword
+  updatePassword,
+  getPoints
 } = require('../controllers/userAuth');
 const {
   addPost,
@@ -26,6 +27,8 @@ router.put('/update-details', protect, updateDetails);
 router.put('/update-password', protect, updatePassword);
 router.post('/forgot-password', forgotPassword);
 router.put('/reset-password/:resetToken', resetPassword);
+
+router.get('/get-points', protect, getPoints);
 
 router.post("/add-post", protect, addPost);
 router.get("/post/:id", protect, getPostById);
