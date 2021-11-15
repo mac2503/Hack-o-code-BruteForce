@@ -8,16 +8,15 @@ const User = require('../models/User');
 // @route     POST /api/v1/user/register
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, phone, rollno, email, password, hostel } = req.body;
+  const { name, phone, email, password, addiction } = req.body;
 
   // Create user
   const user = await User.create({
     name, 
     phone,
-    rollno,
     email,
     password,
-    hostel
+    addiction
   });
 
   sendTokenResponse(user, 200, res);
@@ -87,7 +86,7 @@ exports.updateDetails = asyncHandler (async (req, res, next) => {
 });
 
 // @desc      Update password
-// @route     GET /api/v1/user/update-password
+// @route     PUT /api/v1/user/update-password
 // @access    Private
 exports.updatePassword = asyncHandler (async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
@@ -174,6 +173,24 @@ exports.resetPassword = asyncHandler (async (req, res, next) => {
   await user.save();
 
   sendTokenResponse(user, 200, res);
+});
+
+// @desc      Get points
+// @route     GET /api/v1/user/get-points
+// @access    Private
+exports.getPoints = asyncHandler (async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('+points');
+  var now = new Date();
+  var Difference_In_Time = new Date(now).getTime() - user.createdAt.getTime();
+  var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+  var updatedPoints = Difference_In_Days*20;
+  var intPoints = Math.floor( updatedPoints );
+  user.points = intPoints;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    data: user
+  });
 });
 
 // Get token from model, create cookie & send response
